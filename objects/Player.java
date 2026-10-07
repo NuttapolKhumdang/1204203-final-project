@@ -1,5 +1,6 @@
 package objects;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -67,6 +68,10 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     }
 
     public void draw(Graphics g) {
+        g.setFont(new Font("CommitMono", Font.BOLD, 16));
+        g.drawString("HP: " + life + "/" + GameConfig.MAX_LIFE, 25, 25);
+        g.drawString("HP: " + ammo + "/" + GameConfig.MAX_AMMO, 25, 50);
+
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform originalTransform = g2d.getTransform();
         g2d.rotate(rotation, x + size / 2, y + size / 2);
