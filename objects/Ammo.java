@@ -10,7 +10,8 @@ import config.XConfig;
 import helper.Asset;
 
 public class Ammo extends Thread {
-    Image ammoTexture = Asset.getImage("Ship1_ammo.png");
+    Image ammoTexture = Asset.getAmmo(1);
+    Player owner;
 
     int size = 25;
     double x, y;
@@ -20,7 +21,8 @@ public class Ammo extends Thread {
 
     boolean isCrashed = false;
 
-    Ammo(int x, int y, double direction) {
+    public Ammo(Player player, int x, int y, double direction) {
+        this.owner = player;
         this.x = x;
         this.y = y;
         this.direction = direction;

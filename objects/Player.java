@@ -19,7 +19,7 @@ import config.XConfig;
 import helper.Asset;
 
 public class Player extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
-    private Image shipTexture = Asset.getImage("Ship1.png");
+    private Image shipTexture = Asset.getShip(1);
     private Random random = new Random();
     public Ammo[] ammos = new Ammo[GameConfig.MAX_AMMO];
 
@@ -113,7 +113,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
             if (ammos[idx] != null)
                 continue;
 
-            ammos[idx] = new Ammo(x, y, rotation);
+            ammos[idx] = new Ammo(this, x, y, rotation);
             ammos[idx].start();
             ammo--;
             break;
