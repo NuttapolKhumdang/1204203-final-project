@@ -15,6 +15,7 @@ public class Galaxy extends JPanel implements Runnable {
     Image background = Asset.getImage("background.png");
     Planet[] planet;
     Player player;
+    Player[] enemies;
 
     @Override
     public void run() {
@@ -30,16 +31,20 @@ public class Galaxy extends JPanel implements Runnable {
     }
 
     public void collisionObserver() {
-        // Player ammo with planets
-        for (Ammo ammo : player.ammos) {
-            if (ammo == null)
-                continue;
+        // Player, player's ammo with planets
+        for (Planet p : planet) {
+            for (Ammo ammo : player.ammos) {
+                if (ammo == null)
+                    continue;
 
-            for (Planet p : planet) {
                 if (ammo.isCollision(p.x, p.y)) {
                     ammo.crash();
                     break;
                 }
+            }
+
+            if (player.isCollision(p.x, p.y)) {
+                player.crashWithPlanet();
             }
         }
     }

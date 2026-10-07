@@ -104,6 +104,18 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         }
     }
 
+    public boolean isCollision(int tx, int ty) {
+        return Math.abs(x - tx) <= size
+                && Math.abs(y - ty) <= size;
+    }
+
+    public void crashWithPlanet() {
+        life--;
+
+        x = random.nextInt(canvasWidth - size * 2) + size;
+        y = random.nextInt(canvasHeight - size * 2) + size;
+    }
+
     protected void fire() {
         if (ammo <= 0) {
             return; // out of ammo
