@@ -19,9 +19,9 @@ import config.XConfig;
 import helper.Asset;
 
 public class Player extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
-    Image shipTexture = Asset.getImage("Ship1.png");
-    Random random = new Random();
-    Ammo[] ammos = new Ammo[GameConfig.MAX_AMMO];
+    private Image shipTexture = Asset.getImage("Ship1.png");
+    private Random random = new Random();
+    public Ammo[] ammos = new Ammo[GameConfig.MAX_AMMO];
 
     int canvasWidth = XConfig.DISPLAY_WIDTH;
     int canvasHeight = XConfig.DISPLAY_HEIGH;
@@ -31,7 +31,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     boolean isSPressed = false;
     boolean isDPressed = false;
 
-    double rotation = 180;
+    double rotation = 0;
 
     int x, y;
     int vx = 0;
@@ -46,6 +46,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         while (true) {
             move(isAPressed, isWPressed, isSPressed, isDPressed);
             ammoObserver();
+
             try {
                 Thread.sleep(15 / speed);
             } catch (Exception e) {

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import objects.Ammo;
 import objects.Planet;
 import objects.Player;
 
@@ -19,9 +20,26 @@ public class Galaxy extends JPanel implements Runnable {
     public void run() {
         while (true) {
             repaint();
+            collisionObserver();
+
             try {
                 Thread.sleep(2);
             } catch (Exception e) {
+            }
+        }
+    }
+
+    public void collisionObserver() {
+        // Player ammo with planets
+        for (Ammo ammo : player.ammos) {
+            if (ammo == null)
+                continue;
+
+            for (Planet p : planet) {
+                if (ammo.isCollision(p.x, p.y)) {
+                    ammo.crash();
+                    break;
+                }
             }
         }
     }

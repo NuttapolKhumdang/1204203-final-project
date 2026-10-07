@@ -38,6 +38,18 @@ public class Ammo extends Thread {
         g2d.setTransform(originalTransform);
     }
 
+    public void crash() {
+        isCrashed = true;
+    }
+
+    public boolean isCollision(int tx, int ty) {
+        if (isCrashed)
+            return false;
+
+        return Math.abs(x - tx) <= size
+                && Math.abs(y - ty) <= size;
+    }
+
     protected void move() {
         x += vx;
         y += vy;

@@ -13,7 +13,7 @@ public class Planet extends Thread {
     Image texture = Asset.getImage("Planet_Large.png");
     int[] SIZE = { 30, 45, 60 };
 
-    int x, y;
+    public int x, y;
     int vx, vy;
     int speed;
     int planetSize;
