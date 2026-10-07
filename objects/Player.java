@@ -69,8 +69,8 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
     public void draw(Graphics g) {
         g.setFont(new Font("CommitMono", Font.BOLD, 16));
-        g.drawString("HP: " + life + "/" + GameConfig.MAX_LIFE, 25, 25);
-        g.drawString("HP: " + ammo + "/" + GameConfig.MAX_AMMO, 25, 50);
+        g.drawString("HP  : " + life + "/" + GameConfig.MAX_LIFE, 25, 25);
+        g.drawString("AMMO: " + ammo + "/" + GameConfig.MAX_AMMO, 25, 50);
 
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform originalTransform = g2d.getTransform();
@@ -190,19 +190,19 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-    }
-
-    @Override
     public void mouseMoved(MouseEvent e) {
         int mx = e.getX();
         int my = e.getY();
 
         rotation = calculateRadians(x, y, mx, my);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
     }
 
     @Override
