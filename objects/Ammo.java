@@ -13,26 +13,32 @@ public class Ammo extends Thread {
     Image ammoTexture = Asset.getAmmo(1);
     Player owner;
 
+    public int id;
+
     int size = 25;
-    double x, y;
+    public double x, y;
     double vx, vy;
     double direction;
     int speed = GameConfig.AMMO_SPEED;
 
-    boolean isCrashed = false;
+    public boolean isCrashed = false;
 
-    public Ammo(Player player, int x, int y, double direction) {
+    public Ammo(Player player, int id, int x, int y, double direction) {
         this.owner = player;
+        this.id = id;
         this.x = x;
         this.y = y;
         this.direction = direction;
-
         direction -= Math.PI / 2;
+
         vx = Math.cos(direction);
         vy = Math.sin(direction);
     }
 
     public void draw(Graphics g) {
+        if (isCrashed)
+            return;
+
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform originalTransform = g2d.getTransform();
         g2d.rotate(direction, x + size / 2, y + size / 2);

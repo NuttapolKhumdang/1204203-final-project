@@ -1,5 +1,6 @@
 package objects;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import scence.Game;
 
 public class Player extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
     private Image shipTexture = Asset.getShip(1);
@@ -26,11 +28,15 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     int canvasWidth = XConfig.DISPLAY_WIDTH;
     int canvasHeight = XConfig.DISPLAY_HEIGH;
 
-    boolean isAPressed = false;
-    boolean isWPressed = false;
-    boolean isSPressed = false;
-    boolean isDPressed = false;
+    public int id;
+    private boolean player = false;
+    private boolean isAPressed = false;
+    private boolean isWPressed = false;
+    private boolean isSPressed = false;
+    private boolean isDPressed = false;
 
+    boolean isEnded = false;
+    boolean isCrashed = false;
     double rotation = 0;
 
     int x, y;
@@ -39,13 +45,22 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     int size = 50;
     int ammo = GameConfig.MAX_AMMO;
     int life = GameConfig.MAX_LIFE;
-    int speed = GameConfig.SHIP_MIN_SPEED;
+    int speed = GameConfig.SHIP_SPEED;
 
     @Override
     public void run() {
         while (true) {
-            move(isAPressed, isWPressed, isSPressed, isDPressed);
+            if (player && !isCrashed && !isEnded)
+                move(isAPressed, isWPressed, isSPressed, isDPressed);
+
+            if (isEnded || isCrashed) {
+                move(new PlayerData(0, -100, -100, 0));
+                Game.network.emit("MOVE::" + x + "::" + y + "::" + rotation);
+                break;
+            }
+
             ammoObserver();
+            lifeObserver();
 
             try {
                 Thread.sleep(15 / speed);
@@ -54,28 +69,58 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         }
     }
 
-    public Player() {
+    public Player(int playerId) {
+        this.id = playerId;
+        this.player = playerId == Game.network.getPort();
+
         setOpaque(false);
-        setFocusable(true);
-        requestFocusInWindow();
         setSize(canvasWidth, canvasHeight);
 
-        addKeyListener(this);
-        addMouseListener(this);
-        addMouseMotionListener(this);
+        if (player) {
+            setFocusable(true);
+            requestFocusInWindow();
 
-        x = random.nextInt(canvasWidth - size * 2) + size;
-        y = random.nextInt(canvasHeight - size * 2) + size;
+            addKeyListener(this);
+            addMouseListener(this);
+            addMouseMotionListener(this);
+
+            x = random.nextInt(canvasWidth - size * 2) + size;
+            y = random.nextInt(canvasHeight - size * 2) + size;
+        }
     }
 
     public void draw(Graphics g) {
+        g.setColor(new Color(1f, 1f, 1f));
         g.setFont(new Font("CommitMono", Font.BOLD, 16));
-        g.drawString("HP  : " + life + "/" + GameConfig.MAX_LIFE, 25, 25);
-        g.drawString("AMMO: " + ammo + "/" + GameConfig.MAX_AMMO, 25, 50);
+
+        if (player && isEnded && !isCrashed) {
+            g.setFont(new Font("CommitMono", Font.BOLD, 32));
+            g.drawString("WIN ", XConfig.DISPLAY_WIDTH / 2 - 25, XConfig.DISPLAY_HEIGH / 2);
+            return;
+        }
+
+        if (player && isCrashed) {
+            g.setFont(new Font("CommitMono", Font.BOLD, 32));
+            g.drawString("DIE ", XConfig.DISPLAY_WIDTH / 2 - 25, XConfig.DISPLAY_HEIGH / 2);
+            return;
+        }
+
+        if (player) {
+            g.drawString("HP  : " + life + "/" + GameConfig.MAX_LIFE, 10, 25);
+            g.drawString("AMMO: " + ammo + "/" + GameConfig.MAX_AMMO, 10, 50);
+            g.drawString("NAME: " + String.valueOf(id), 10, 75);
+        } else {
+            g.setFont(new Font("CommitMono", Font.PLAIN, 12));
+            g.drawString("HP  : " + life + "/" + GameConfig.MAX_LIFE, x, y - 10);
+        }
+
+        g.setFont(new Font("CommitMono", Font.PLAIN, 12));
+        g.drawString(String.valueOf(id), x, y + size + 20);
 
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform originalTransform = g2d.getTransform();
-        g2d.rotate(rotation, x + size / 2, y + size / 2);
+
+        g2d.rotate(this.rotation, x + size / 2, y + size / 2);
         g2d.drawImage(shipTexture, x, y, size, size, null);
         g2d.setTransform(originalTransform);
 
@@ -105,8 +150,12 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     }
 
     public boolean isCollision(int tx, int ty) {
-        return Math.abs(x - tx) <= size
-                && Math.abs(y - ty) <= size;
+        return Math.abs(x - tx) <= size - 10
+                && Math.abs(y - ty) <= size - 10;
+    }
+
+    public void ended() {
+        isEnded = true;
     }
 
     public void crashWithPlanet() {
@@ -114,6 +163,34 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
         x = random.nextInt(canvasWidth - size * 2) + size;
         y = random.nextInt(canvasHeight - size * 2) + size;
+        Game.network.emit("LIFE::" + life);
+    }
+
+    public void crashWithAmmo(Ammo ammo) {
+        if (ammo.owner == this)
+            return;
+
+        this.life--;
+        Game.network.emit("LIFE::" + life);
+    }
+
+    protected void lifeObserver() {
+        if (life <= 0) {
+            life = 0;
+            isCrashed = true;
+        }
+    }
+
+    public void fire(AmmoData a) {
+        for (int idx = 0; idx < ammos.length; idx++) {
+            if (ammos[idx] != null)
+                continue;
+
+            ammos[idx] = new Ammo(this, a.id, a.x, a.y, a.rotation);
+            ammos[idx].start();
+            ammo--;
+            break;
+        }
     }
 
     protected void fire() {
@@ -125,11 +202,24 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
             if (ammos[idx] != null)
                 continue;
 
-            ammos[idx] = new Ammo(this, x, y, rotation);
+            int id = random.nextInt(999999);
+
+            Game.network.emit("FIRE::" + id + "::" + x + "::" + y + "::" + rotation);
+            ammos[idx] = new Ammo(this, id, x, y, rotation);
             ammos[idx].start();
             ammo--;
             break;
         }
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public void move(PlayerData p) {
+        this.x = p.x;
+        this.y = p.y;
+        this.rotation = p.rotation;
     }
 
     protected void move(boolean a, boolean w, boolean s, boolean d) {
@@ -160,6 +250,9 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
             if (x <= size)
                 x = size;
         }
+
+        if (a || w || s || d)
+            Game.network.emit("MOVE::" + x + "::" + y + "::" + rotation);
     }
 
     @Override
@@ -208,6 +301,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         int my = e.getY();
 
         rotation = calculateRadians(x, y, mx, my);
+        Game.network.emit("MOVE::" + x + "::" + y + "::" + rotation);
     }
 
     @Override
