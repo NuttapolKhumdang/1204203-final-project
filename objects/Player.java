@@ -88,6 +88,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
             x = random.nextInt(canvasWidth - size * 2) + size;
             y = random.nextInt(canvasHeight - size * 2) + size;
+            Game.network.emit(Network.ACTION_PLAYER_MOVE, new Position(0, x, y, rotation));
         }
     }
 
@@ -166,6 +167,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         x = random.nextInt(canvasWidth - size * 2) + size;
         y = random.nextInt(canvasHeight - size * 2) + size;
         Game.network.emit(Network.ACTION_PLAYER_LIFE, life);
+        Game.network.emit(Network.ACTION_PLAYER_MOVE, new Position(0, x, y, rotation));
     }
 
     public void crashWithAmmo(Ammo ammo) {
