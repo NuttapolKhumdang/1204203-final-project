@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import helper.Network;
 import helper.Position;
 import objects.Ammo;
 import objects.Enemy;
@@ -58,7 +59,7 @@ public class Galaxy extends JPanel implements Runnable {
         }
 
         if (living <= 0 && !Game.network.isGameEnded()) {
-            Game.network.emit("ENDED");
+            Game.network.emit(Network.ACTION_GAME_ENDED);
         }
     }
 
