@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import helper.Network;
 import helper.Position;
 import scence.Game;
 
@@ -56,7 +57,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
             if (isEnded || isCrashed) {
                 move(new Position(0, -100, -100, 0));
-                Game.network.emit("MOVE::" + x + "::" + y + "::" + rotation);
+                Game.network.emit(Network.ACTION_PLAYER_MOVE, new Position(0, x, y, rotation));
                 break;
             }
 
@@ -164,7 +165,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
         x = random.nextInt(canvasWidth - size * 2) + size;
         y = random.nextInt(canvasHeight - size * 2) + size;
-        Game.network.emit("LIFE::" + life);
+        Game.network.emit(Network.ACTION_PLAYER_LIFE, life);
     }
 
     public void crashWithAmmo(Ammo ammo) {
@@ -172,7 +173,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
             return;
 
         this.life--;
-        Game.network.emit("LIFE::" + life);
+        Game.network.emit(Network.ACTION_PLAYER_LIFE, life);
     }
 
     protected void lifeObserver() {
@@ -205,7 +206,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
             int id = random.nextInt(999999);
 
-            Game.network.emit("FIRE::" + id + "::" + x + "::" + y + "::" + rotation);
+            Game.network.emit(Network.ACTION_PLAYER_FIRE, new Position(id, x, y, rotation));
             ammos[idx] = new Ammo(this, id, x, y, rotation);
             ammos[idx].start();
             ammo--;
@@ -253,7 +254,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         }
 
         if (a || w || s || d)
-            Game.network.emit("MOVE::" + x + "::" + y + "::" + rotation);
+            Game.network.emit(Network.ACTION_PLAYER_MOVE, new Position(0, x, y, rotation));
     }
 
     @Override
@@ -302,7 +303,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         int my = e.getY();
 
         rotation = calculateRadians(x, y, mx, my);
-        Game.network.emit("MOVE::" + x + "::" + y + "::" + rotation);
+        Game.network.emit(Network.ACTION_PLAYER_MOVE, new Position(0, x, y, rotation));
     }
 
     @Override
