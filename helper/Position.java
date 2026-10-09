@@ -20,4 +20,9 @@ public class Position {
         this(id, x, y);
         this.rotation = rotation;
     }
+
+    @Override
+    public String toString() {
+        return "" + x + "::" + y + "::" + rotation;
+    }
 }
