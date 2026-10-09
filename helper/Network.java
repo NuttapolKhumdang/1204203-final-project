@@ -141,9 +141,9 @@ public class Network {
 
         if (action == ACTION_PLAYER_MOVE) {
             int id = Integer.parseInt(sender);
-            int x = Integer.parseInt(fracture[2]);
-            int y = Integer.parseInt(fracture[3]);
-            double rotation = Double.parseDouble(fracture[4]);
+            int x = Integer.parseInt(fracture[3]);
+            int y = Integer.parseInt(fracture[4]);
+            double rotation = Double.parseDouble(fracture[5]);
 
             Position position = new Position(id, x, y, rotation);
             player.put(id, position);
@@ -158,9 +158,9 @@ public class Network {
 
         if (action == ACTION_PLAYER_FIRE) {
             int id = Integer.parseInt(sender);
-            int x = Integer.parseInt(fracture[2]);
-            int y = Integer.parseInt(fracture[3]);
-            double rotation = Double.parseDouble(fracture[4]);
+            int x = Integer.parseInt(fracture[3]);
+            int y = Integer.parseInt(fracture[4]);
+            double rotation = Double.parseDouble(fracture[5]);
 
             Position position = new Position(id, x, y, rotation);
             ammo.put(id, position);
