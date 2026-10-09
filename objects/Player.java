@@ -74,7 +74,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     public Player(int playerId) {
         this.id = playerId;
         this.player = playerId == Game.network.getPort();
-        this.shipTexture = Asset.getShip(playerId % 4 + 1);
+        this.shipTexture = Asset.getShip(playerId / 2 % 4 + 1);
 
         setOpaque(false);
         setSize(canvasWidth, canvasHeight);
