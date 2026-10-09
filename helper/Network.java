@@ -56,6 +56,10 @@ public class Network {
         }
     }
 
+    public void emit(int action) {
+        emit(action, "");
+    }
+
     public void emit(int action, int message) {
         emit(action, String.valueOf(message));
     }
