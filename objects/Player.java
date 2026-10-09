@@ -23,7 +23,7 @@ import helper.Position;
 import scence.Game;
 
 public class Player extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
-    private Image shipTexture = Asset.getShip(1);
+    private Image shipTexture;;
     private Random random = new Random();
     public Ammo[] ammos = new Ammo[GameConfig.MAX_AMMO];
 
@@ -74,6 +74,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     public Player(int playerId) {
         this.id = playerId;
         this.player = playerId == Game.network.getPort();
+        this.shipTexture = Asset.getShip(playerId % 4 + 1);
 
         setOpaque(false);
         setSize(canvasWidth, canvasHeight);

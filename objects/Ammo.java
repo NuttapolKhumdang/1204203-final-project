@@ -10,7 +10,7 @@ import config.XConfig;
 import helper.Asset;
 
 public class Ammo extends Thread {
-    Image ammoTexture = Asset.getAmmo(1);
+    Image ammoTexture;
     Player owner;
 
     public int id;
@@ -26,6 +26,7 @@ public class Ammo extends Thread {
     public Ammo(Player player, int id, int x, int y, double direction) {
         this.owner = player;
         this.id = id;
+        this.ammoTexture = Asset.getAmmo(player.id % 4 + 1);
         this.x = x;
         this.y = y;
         this.direction = direction;
