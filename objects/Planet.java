@@ -13,6 +13,7 @@ public class Planet extends Thread {
     Image texture = Asset.getImage("Planet_Large.png");
     int[] SIZE = { 30, 45, 60 };
 
+    int id;
     public int x, y;
     int vx, vy;
     int speed;
@@ -26,8 +27,9 @@ public class Planet extends Thread {
     public Planet() {
         this.canvasWidth = XConfig.DISPLAY_WIDTH;
         this.canvasHeight = XConfig.DISPLAY_HEIGH;
+        this.id = random.nextInt(999);
 
-        planetSize = SIZE[random.nextInt(3)];
+        planetSize = SIZE[id & SIZE.length - 1];
         x = random.nextInt(canvasWidth - planetSize * 2) + planetSize;
         y = random.nextInt(canvasHeight - planetSize * 2) + planetSize;
 
