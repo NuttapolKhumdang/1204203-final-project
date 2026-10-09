@@ -12,6 +12,14 @@ import config.GameConfig;
 import config.XConfig;
 
 public class Network {
+    public final static int ACTION_CLIENT_SIZE = 11;
+    public final static int ACTION_CLIENT_PORT = 12;
+    public final static int ACTION_GAME_START  = 21;
+    public final static int ACTION_GAME_ENDED  = 22;
+    public final static int ACTION_PLAYER_MOVE = 31;
+    public final static int ACTION_PLAYER_LIFE = 32;
+    public final static int ACTION_PLAYER_FIRE = 33;
+
     private PrintWriter writer;
     private Socket socket;
     private int connectionCount = 0;
