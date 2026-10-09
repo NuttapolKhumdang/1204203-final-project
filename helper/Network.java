@@ -109,13 +109,13 @@ public class Network {
     public void handler(String message) {
         String[] fracture = message.split("::");
         String sender = fracture[0];
-        String action = fracture[1];
+        Integer action = Integer.parseInt(fracture[1]);
 
-        if (action.equals("CLIENT_SIZE")) {
+        if (action == ACTION_CLIENT_SIZE) {
             connectionCount = Integer.valueOf(fracture[2]);
         }
 
-        if (action.equals("CLIENT_PORT")) {
+        if (action == ACTION_CLIENT_PORT) {
             for (int i = 2; i < fracture.length; i++) {
                 int id = Integer.valueOf(fracture[i]);
 
@@ -131,15 +131,15 @@ public class Network {
             }
         }
 
-        if (action.equals("START")) {
+        if (action == ACTION_GAME_START) {
             gameStart = true;
         }
 
-        if (action.equals("ENDED")) {
+        if (action == ACTION_GAME_ENDED) {
             gameEnded = true;
         }
 
-        if (action.equals("MOVE")) {
+        if (action == ACTION_PLAYER_MOVE) {
             int id = Integer.parseInt(sender);
             int x = Integer.parseInt(fracture[2]);
             int y = Integer.parseInt(fracture[3]);
@@ -149,14 +149,14 @@ public class Network {
             player.put(id, position);
         }
 
-        if (action.equals("LIFE")) {
+        if (action == ACTION_PLAYER_LIFE) {
             int id = Integer.parseInt(sender);
             int hp = Integer.parseInt(fracture[2]);
 
             life.put(id, hp);
         }
 
-        if (action.equals("FIRE")) {
+        if (action == ACTION_PLAYER_FIRE) {
             int id = Integer.parseInt(sender);
             int ammoId = Integer.parseInt(fracture[2]);
             int x = Integer.parseInt(fracture[3]);
