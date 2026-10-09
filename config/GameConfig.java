@@ -1,7 +1,7 @@
 package config;
 
 public class GameConfig {
-    public static int MAX_PLAYER = 4;
+    public static int MAX_PLAYER = 3;
     public static int MAX_LIFE = 50;
     public static int MAX_AMMO = 5;
 
