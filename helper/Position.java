@@ -23,6 +23,6 @@ public class Position {
 
     @Override
     public String toString() {
-        return "" + x + "::" + y + "::" + rotation;
+        return "" + id + "::" + x + "::" + y + "::" + rotation;
     }
 }

@@ -204,8 +204,6 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
             if (ammos[idx] != null)
                 continue;
 
-            int id = random.nextInt(999999);
-
             Game.network.emit(Network.ACTION_PLAYER_FIRE, new Position(id, x, y, rotation));
             ammos[idx] = new Ammo(this, id, x, y, rotation);
             ammos[idx].start();

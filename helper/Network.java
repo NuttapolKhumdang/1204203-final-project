@@ -158,12 +158,11 @@ public class Network {
 
         if (action == ACTION_PLAYER_FIRE) {
             int id = Integer.parseInt(sender);
-            int ammoId = Integer.parseInt(fracture[2]);
-            int x = Integer.parseInt(fracture[3]);
-            int y = Integer.parseInt(fracture[4]);
-            double rotation = Double.parseDouble(fracture[5]);
+            int x = Integer.parseInt(fracture[2]);
+            int y = Integer.parseInt(fracture[3]);
+            double rotation = Double.parseDouble(fracture[4]);
 
-            Position position = new Position(ammoId, x, y, rotation);
+            Position position = new Position(id, x, y, rotation);
             ammo.put(id, position);
         }
     }
