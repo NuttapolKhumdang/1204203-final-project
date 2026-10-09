@@ -2,11 +2,9 @@ package scence;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.Random;
 
 import javax.swing.JPanel;
 
-import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
 import helper.Network;
@@ -30,6 +28,7 @@ public class Galaxy extends JPanel implements Runnable {
             enemyObserver();
             ammoObserver();
             gameObserver();
+            planetObserver();
 
             try {
                 Thread.sleep(15);
@@ -64,8 +63,7 @@ public class Galaxy extends JPanel implements Runnable {
     }
 
     public void ammoObserver() {
-        for (Player e : enemies) {
-
+        for (Enemy e : enemies) {
             Position ammoData = Game.network.getAmmo(e.id);
             if (ammoData == null)
                 continue;
@@ -101,7 +99,19 @@ public class Galaxy extends JPanel implements Runnable {
                     break;
                 }
             }
+            for (Enemy enemy : enemies) {
+                // Player's ammo with planet
+                for (Ammo ememyAmmo : enemy.ammos) {
+                    if (ememyAmmo == null || ememyAmmo.isCrashed)
+                        continue;
 
+                    if (ememyAmmo.isCollision(p.x, p.y)) {
+                        ememyAmmo.crash();
+                        break;
+                    }
+                }
+            }
+            
             // Player with planet
             if (player.isCollision(p.x, p.y)) {
                 player.crashWithPlanet();
@@ -136,6 +146,13 @@ public class Galaxy extends JPanel implements Runnable {
         }
     }
 
+    public void planetObserver() {
+        for (Planet p : planet) {
+            Position position = Game.network.getPlanet(p.id);
+            p.move(position);
+        }
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -155,7 +172,6 @@ public class Galaxy extends JPanel implements Runnable {
     public Galaxy(int enemiesCount) {
         setSize(XConfig.DISPLAY_WIDTH, XConfig.DISPLAY_HEIGH);
         setLayout(null);
-        Random random = new Random();
 
         player = new Player(Game.network.getPort());
         add(player);
@@ -167,11 +183,11 @@ public class Galaxy extends JPanel implements Runnable {
             new Thread(enemies[i]).start();
         }
 
-        planet = new Planet[random.nextInt(GameConfig.PLANET_MAX_COUNT - GameConfig.PLANET_MIN_COUNT)
-                + GameConfig.PLANET_MIN_COUNT];
+        planet = new Planet[Game.network.getPlanetCount()];
 
+        Position[] planetPosition = Game.network.getPlanet().values().toArray(new Position[0]);
         for (int i = 0; i < planet.length; i++) {
-            planet[i] = new Planet();
+            planet[i] = new Planet(planetPosition[i].id);
             planet[i].start();
         }
     }

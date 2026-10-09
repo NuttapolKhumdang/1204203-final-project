@@ -7,13 +7,16 @@ import java.util.Random;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import helper.Network;
+import helper.Position;
+import scence.Game;
 
 public class Planet extends Thread {
     Random random = new Random();
     Image texture = Asset.getImage("Planet_Large.png");
     int[] SIZE = { 30, 45, 60 };
 
-    int id;
+    public int id;
     public int x, y;
     int vx, vy;
     int speed;
@@ -24,10 +27,10 @@ public class Planet extends Thread {
         g.drawImage(texture, x, y, planetSize, planetSize, null);
     }
 
-    public Planet() {
+    public Planet(int id) {
         this.canvasWidth = XConfig.DISPLAY_WIDTH;
         this.canvasHeight = XConfig.DISPLAY_HEIGH;
-        this.id = random.nextInt(999);
+        this.id = id;
 
         planetSize = SIZE[id & SIZE.length - 1];
         x = random.nextInt(canvasWidth - planetSize * 2) + planetSize;
@@ -39,6 +42,11 @@ public class Planet extends Thread {
         } while (vx == 0 && vy == 0); // do it until some velocity is not zero
 
         speed = random.nextInt(GameConfig.PLANET_MAX_SPEED) + GameConfig.PLANET_MIN_SPEED;
+    }
+
+    public void move(Position position) {
+        x = position.x;
+        y = position.y;
     }
 
     protected void move() {
@@ -65,13 +73,18 @@ public class Planet extends Thread {
 
         if (speed > GameConfig.PLANET_MAX_SPEED)
             speed = GameConfig.PLANET_MAX_SPEED;
+
+        if (Game.network.isPlanetController())
+            Game.network.emit(Network.ACTION_PLANET_MOVE, new Position(id, x, y, 0));
     }
 
     @Override
     public void run() {
         while (true) {
-            move();
-            collisionObserver();
+            if (Game.network.isPlanetController()) {
+                move();
+                collisionObserver();
+            }
 
             try {
                 Thread.sleep(100 / speed);

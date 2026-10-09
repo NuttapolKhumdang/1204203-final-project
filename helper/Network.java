@@ -19,14 +19,21 @@ public class Network {
     public final static int ACTION_PLAYER_MOVE = 31;
     public final static int ACTION_PLAYER_LIFE = 32;
     public final static int ACTION_PLAYER_FIRE = 33;
+    public final static int ACTION_PLANET_SIZE = 41;
+    public final static int ACTION_PLANET_INFO = 42;
+    public final static int ACTION_PLANET_MOVE = 43;
 
     private PrintWriter writer;
     private Socket socket;
-    private int connectionCount = 0;
 
+    private int connectionCount = 0;
+    private int planetCount = 0;
+
+    private boolean planetController = false;
     private boolean gameStart = false;
     private boolean gameEnded = false;
     private static ArrayList<Integer> connectionPorts = new ArrayList<>();
+    private static HashMap<Integer, Position> planet = new HashMap<>();
     private static HashMap<Integer, Position> player = new HashMap<>();
     private static HashMap<Integer, Position> ammo = new HashMap<>();
     private static HashMap<Integer, Integer> life = new HashMap<>();
@@ -84,8 +91,32 @@ public class Network {
         return gameEnded;
     }
 
+    public void setPlanetController() {
+        planetController = true;
+    }
+
+    public boolean isPlanetController() {
+        return planetController;
+    }
+
+    public boolean isPlanetExists() {
+        return planetCount != 0;
+    }
+
     public ArrayList<Integer> enemiesIds() {
         return connectionPorts;
+    }
+
+    public int getPlanetCount() {
+        return planetCount;
+    }
+
+    public HashMap<Integer, Position> getPlanet() {
+        return planet;
+    }
+
+    public Position getPlanet(int id) {
+        return planet.get(id);
     }
 
     public Position getPlayer(int id) {
@@ -164,6 +195,24 @@ public class Network {
 
             Position position = new Position(id, x, y, rotation);
             ammo.put(id, position);
+        }
+
+        if (action == ACTION_PLANET_SIZE) {
+            planetCount = Integer.parseInt(fracture[2]);
+        }
+
+        if (action == ACTION_PLANET_INFO) {
+            for (int i = 2; i < planetCount + 2; i++) {
+                int id = Integer.parseInt(fracture[i]);
+                planet.put(id, new Position(id));
+            }
+        }
+
+        if (action == ACTION_PLANET_MOVE) {
+            int id = Integer.parseInt(fracture[2]);
+            int x = Integer.parseInt(fracture[3]);
+            int y = Integer.parseInt(fracture[4]);
+            planet.put(id, new Position(id, x, y));
         }
     }
 }
