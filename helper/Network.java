@@ -14,8 +14,8 @@ import config.XConfig;
 public class Network {
     public final static int ACTION_CLIENT_SIZE = 11;
     public final static int ACTION_CLIENT_PORT = 12;
-    public final static int ACTION_GAME_START  = 21;
-    public final static int ACTION_GAME_ENDED  = 22;
+    public final static int ACTION_GAME_START = 21;
+    public final static int ACTION_GAME_ENDED = 22;
     public final static int ACTION_PLAYER_MOVE = 31;
     public final static int ACTION_PLAYER_LIFE = 32;
     public final static int ACTION_PLAYER_FIRE = 33;
@@ -49,10 +49,19 @@ public class Network {
         }, "network-client").start();
     }
 
-    public void emit(String message) {
+    public void emit(int action, String message) {
+        String ensemble = "" + socket.getLocalPort() + "::" + action + "::" + message;
         synchronized (writer) {
-            writer.println("" + socket.getLocalPort() + "::" + message);
+            writer.println(ensemble);
         }
+    }
+
+    public void emit(int action, int message) {
+        emit(action, String.valueOf(message));
+    }
+
+    public void emit(int action, Position position) {
+        emit(action, String.valueOf(position));
     }
 
     public int getPort() {
