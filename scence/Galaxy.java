@@ -9,12 +9,11 @@ import javax.swing.JPanel;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import helper.Position;
 import objects.Ammo;
-import objects.AmmoData;
 import objects.Enemy;
 import objects.Planet;
 import objects.Player;
-import objects.PlayerData;
 
 public class Galaxy extends JPanel implements Runnable {
     Image background = Asset.getImage("background.png");
@@ -48,7 +47,7 @@ public class Galaxy extends JPanel implements Runnable {
         int living = enemies.length;
 
         for (Player enemy : enemies) {
-            PlayerData data = Game.network.getPLayerData(enemy.id);
+            Position data = Game.network.getPlayer(enemy.id);
             enemy.move(data);
 
             int life = Game.network.getLife(enemy.id);
@@ -66,7 +65,7 @@ public class Galaxy extends JPanel implements Runnable {
     public void ammoObserver() {
         for (Player e : enemies) {
 
-            AmmoData ammoData = Game.network.getAmmo(e.id);
+            Position ammoData = Game.network.getAmmo(e.id);
             if (ammoData == null)
                 continue;
 

@@ -10,9 +10,6 @@ import java.util.HashMap;
 
 import config.GameConfig;
 import config.XConfig;
-import objects.AmmoData;
-import objects.PlayerData;
-import scence.Game;
 
 public class Network {
     private PrintWriter writer;
@@ -22,8 +19,8 @@ public class Network {
     private boolean gameStart = false;
     private boolean gameEnded = false;
     private static ArrayList<Integer> connectionPorts = new ArrayList<>();
-    private static HashMap<Integer, PlayerData> player = new HashMap<>();
-    private static HashMap<Integer, AmmoData> ammo = new HashMap<>();
+    private static HashMap<Integer, Position> player = new HashMap<>();
+    private static HashMap<Integer, Position> ammo = new HashMap<>();
     private static HashMap<Integer, Integer> life = new HashMap<>();
 
     public void connect(String host) throws IOException {
@@ -70,11 +67,11 @@ public class Network {
         return connectionPorts;
     }
 
-    public PlayerData getPLayerData(int id) {
+    public Position getPlayer(int id) {
         return player.get(id);
     }
 
-    public AmmoData getAmmo(int id) {
+    public Position getAmmo(int id) {
         return ammo.get(id);
     }
 
@@ -109,7 +106,7 @@ public class Network {
 
                 System.out.println("PORT::" + id);
 
-                player.put(id, new PlayerData(id));
+                player.put(id, new Position(id));
             }
         }
 
@@ -127,8 +124,8 @@ public class Network {
             int y = Integer.parseInt(fracture[3]);
             double rotation = Double.parseDouble(fracture[4]);
 
-            PlayerData p = new PlayerData(id, x, y, rotation);
-            player.put(id, p);
+            Position position = new Position(id, x, y, rotation);
+            player.put(id, position);
         }
 
         if (action.equals("LIFE")) {
@@ -145,8 +142,8 @@ public class Network {
             int y = Integer.parseInt(fracture[4]);
             double rotation = Double.parseDouble(fracture[5]);
 
-            AmmoData ammoData = new AmmoData(ammoId, x, y, rotation);
-            ammo.put(id, ammoData);
+            Position position = new Position(ammoId, x, y, rotation);
+            ammo.put(id, position);
         }
     }
 }

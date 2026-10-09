@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import helper.Position;
 import scence.Game;
 
 public class Player extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
@@ -54,7 +55,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
                 move(isAPressed, isWPressed, isSPressed, isDPressed);
 
             if (isEnded || isCrashed) {
-                move(new PlayerData(0, -100, -100, 0));
+                move(new Position(0, -100, -100, 0));
                 Game.network.emit("MOVE::" + x + "::" + y + "::" + rotation);
                 break;
             }
@@ -181,12 +182,12 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         }
     }
 
-    public void fire(AmmoData a) {
+    public void fire(Position position) {
         for (int idx = 0; idx < ammos.length; idx++) {
             if (ammos[idx] != null)
                 continue;
 
-            ammos[idx] = new Ammo(this, a.id, a.x, a.y, a.rotation);
+            ammos[idx] = new Ammo(this, position.id, position.x, position.y, position.rotation);
             ammos[idx].start();
             ammo--;
             break;
@@ -216,7 +217,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         this.life = life;
     }
 
-    public void move(PlayerData p) {
+    public void move(Position p) {
         this.x = p.x;
         this.y = p.y;
         this.rotation = p.rotation;
