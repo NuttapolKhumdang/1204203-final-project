@@ -19,6 +19,12 @@ public class Main extends JFrame {
     public static void main(String[] args) {
         String hostIp = JOptionPane.showInputDialog(null, "Connect to Server", "final@oop",
                 JOptionPane.QUESTION_MESSAGE);
-        new Main(hostIp != "" ? hostIp : "::1");
+
+        String defaultHost = "::1";
+
+        if (hostIp.split(".").length != 4)
+            hostIp = defaultHost;
+
+        new Main(hostIp);
     }
 }
