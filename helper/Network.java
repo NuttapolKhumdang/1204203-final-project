@@ -202,7 +202,7 @@ public class Network {
         }
 
         if (action == ACTION_PLANET_INFO) {
-            for (int i = 2; i < planetCount + 2; i++) {
+            for (int i = 2; i < fracture.length; i++) {
                 int id = Integer.parseInt(fracture[i]);
                 planet.put(id, new Position(id));
             }

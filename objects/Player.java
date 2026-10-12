@@ -31,6 +31,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     int canvasHeight = XConfig.DISPLAY_HEIGH;
 
     public int id;
+    public int textureId;
     private boolean player = false;
     private boolean isAPressed = false;
     private boolean isWPressed = false;
@@ -74,7 +75,8 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     public Player(int playerId) {
         this.id = playerId;
         this.player = playerId == Game.network.getPort();
-        this.shipTexture = Asset.getShip(playerId / 2 % 4 + 1);
+        this.textureId = ((playerId - 2) / 2) % 4 + 1;
+        this.shipTexture = Asset.getShip(this.textureId);
 
         setOpaque(false);
         setSize(canvasWidth, canvasHeight);
