@@ -8,12 +8,12 @@ import config.GameConfig;
 import config.XConfig;
 
 public class Server extends Thread {
-    // Thread-safe list of all connected clients
     final CopyOnWriteArrayList<ClientHandler> clients = new CopyOnWriteArrayList<>();
 
     @Override
     public void run() {
         Server server = new Server();
+        System.out.println("SERVER::WATING_FOR::" + GameConfig.MAX_PLAYER);
 
         try {
             ServerSocket serverSocket = new ServerSocket(XConfig.NETWORK_PORT);
@@ -21,7 +21,7 @@ public class Server extends Thread {
                 Socket socket = serverSocket.accept();
                 ClientHandler handler = new ClientHandler(socket, server);
 
-                server.clients.add(handler); // register
+                server.clients.add(handler);
                 new Thread(handler).start();
 
                 System.out.println("SERVER::CONNECTED::" + socket.getInetAddress());
@@ -42,7 +42,6 @@ public class Server extends Thread {
         }
     }
 
-    // Call this from anywhere to broadcast
     public void broadcast(String message) {
         for (ClientHandler client : clients) {
             client.send(message);

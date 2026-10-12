@@ -30,13 +30,11 @@ public class ClientHandler implements Runnable {
 
             String line;
             while ((line = in.readLine()) != null) {
-                // Example: broadcast every message from a client to ALL clients
                 server.broadcast(line);
             }
         } catch (Exception e) {
-            // client disconnected or error
         } finally {
-            server.clients.remove(this); // unregister on disconnect
+            server.clients.remove(this);
             try {
                 socket.close();
             } catch (Exception ignored) {
@@ -46,11 +44,10 @@ public class ClientHandler implements Runnable {
 
     public void send(String message) {
         try {
-            synchronized (this) { // prevent interleaved writes
+            synchronized (this) {
                 out.println(message);
             }
         } catch (Exception e) {
-            // client gone — remove it
         }
     }
 }
