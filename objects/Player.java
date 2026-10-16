@@ -32,7 +32,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
     public int id;
     public int textureId;
-    private boolean player = false;
+    private boolean isPlayer = false;
     private boolean isAPressed = false;
     private boolean isWPressed = false;
     private boolean isSPressed = false;
@@ -53,7 +53,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     @Override
     public void run() {
         while (true) {
-            if (player && !isCrashed && !isEnded)
+            if (isPlayer && !isCrashed && !isEnded)
                 move(isAPressed, isWPressed, isSPressed, isDPressed);
 
             if (isEnded || isCrashed) {
@@ -74,14 +74,14 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
     public Player(int playerId) {
         this.id = playerId;
-        this.player = playerId == Game.network.getPort();
+        this.isPlayer = playerId == Game.network.getPort();
         this.textureId = ((playerId - 2) / 2) % 4 + 1;
         this.shipTexture = Asset.getShip(this.textureId);
 
         setOpaque(false);
         setSize(canvasWidth, canvasHeight);
 
-        if (player) {
+        if (isPlayer) {
             setFocusable(true);
             requestFocusInWindow();
 
@@ -99,19 +99,19 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         g.setColor(new Color(1f, 1f, 1f));
         g.setFont(new Font("CommitMono", Font.BOLD, 16));
 
-        if (player && isEnded && !isCrashed) {
+        if (isPlayer && isEnded && !isCrashed) {
             g.setFont(new Font("CommitMono", Font.BOLD, 32));
             g.drawString("WIN ", XConfig.DISPLAY_WIDTH / 2 - 25, XConfig.DISPLAY_HEIGH / 2);
             return;
         }
 
-        if (player && isCrashed) {
+        if (isPlayer && isCrashed) {
             g.setFont(new Font("CommitMono", Font.BOLD, 32));
             g.drawString("DIE ", XConfig.DISPLAY_WIDTH / 2 - 25, XConfig.DISPLAY_HEIGH / 2);
             return;
         }
 
-        if (player) {
+        if (isPlayer) {
             g.drawString("HP  : " + life + "/" + GameConfig.MAX_LIFE, 10, 25);
             g.drawString("AMMO: " + ammo + "/" + GameConfig.MAX_AMMO, 10, 50);
             g.drawString("NAME: " + String.valueOf(id), 10, 75);
