@@ -49,11 +49,10 @@ class MainDialog extends JFrame {
     private boolean isServer = false;
 
     MainDialog() {
-        setSize(600, 400);
+        setSize(600, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        setVisible(true);
         setLayout(null);
 
         JLabel heroLabel = new JLabel("Space Ship Battle");
@@ -84,7 +83,7 @@ class MainDialog extends JFrame {
         });
         add(clientButton);
 
-        JButton serverButton = new JButton("Start Server");
+        JButton serverButton = new JButton("Start as Server");
         serverButton.setBounds(20, 180, 270, 50);
         serverButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -96,6 +95,7 @@ class MainDialog extends JFrame {
             }
         });
         add(serverButton);
+        setVisible(true);
     }
 
     public boolean isServer() {

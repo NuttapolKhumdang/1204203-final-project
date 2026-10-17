@@ -45,8 +45,14 @@ public class Planet extends Thread {
     }
 
     public void move(Position position) {
+        if (Game.network.isPlanetController())
+            return;
+
         x = position.x;
         y = position.y;
+        vx = position.vx;
+        vy = position.vy;
+        speed = position.speed;
     }
 
     protected void move() {
@@ -55,34 +61,45 @@ public class Planet extends Thread {
     }
 
     protected void collisionObserver() {
+        boolean isCollision = false;
+
         if (x <= 0) {
             vx = 1;
             vy = random.nextInt(3) - 1;
+
+            isCollision = true;
         } else if ((x + planetSize) >= canvasWidth) {
             vx = -1;
             vy = random.nextInt(3) - 1;
+
+            isCollision = true;
         }
 
         if (y <= 0) {
             vx = random.nextInt(3) - 1;
             vy = 1;
+
+            isCollision = true;
         } else if ((y + planetSize) >= canvasHeight) {
             vx = random.nextInt(3) - 1;
             vy = -1;
+
+            isCollision = true;
         }
 
         if (speed > GameConfig.PLANET_MAX_SPEED)
             speed = GameConfig.PLANET_MAX_SPEED;
 
-        if (Game.network.isPlanetController())
-            Game.network.emit(Network.ACTION_PLANET_MOVE, new Position(id, x, y, 0));
+        if (isCollision && Game.network.isPlanetController())
+            Game.network.emit(Network.ACTION_PLANET_MOVE, new Position(id, x, y, vx, vy, speed));
     }
 
     @Override
     public void run() {
         while (true) {
+            move();
+
             if (Game.network.isPlanetController()) {
-                move();
                 collisionObserver();
             }
 

@@ -111,7 +111,7 @@ public class Galaxy extends JPanel implements Runnable {
                     }
                 }
             }
-            
+
             // Player with planet
             if (player.isCollision(p.x, p.y)) {
                 player.crashWithPlanet();
@@ -149,6 +149,10 @@ public class Galaxy extends JPanel implements Runnable {
     public void planetObserver() {
         for (Planet p : planet) {
             Position position = Game.network.getPlanet(p.id);
+
+            if (position == null)
+                continue;
+
             p.move(position);
         }
     }
