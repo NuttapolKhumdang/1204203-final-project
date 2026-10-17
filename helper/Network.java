@@ -116,7 +116,9 @@ public class Network {
     }
 
     public Position getPlanet(int id) {
-        return planet.get(id);
+        Position p = planet.get(id);
+        planet.put(id, null);
+        return p;
     }
 
     public Position getPlayer(int id) {
@@ -212,7 +214,12 @@ public class Network {
             int id = Integer.parseInt(fracture[2]);
             int x = Integer.parseInt(fracture[3]);
             int y = Integer.parseInt(fracture[4]);
-            planet.put(id, new Position(id, x, y));
+            int vx = Integer.parseInt(fracture[6]);
+            int vy = Integer.parseInt(fracture[7]);
+            int speed = Integer.parseInt(fracture[8]);
+
+            System.out.println(x + " " + y + " " + vx + " " + vy + " " + speed);
+            planet.put(id, new Position(id, x, y, vx, vy, speed));
         }
     }
 }
