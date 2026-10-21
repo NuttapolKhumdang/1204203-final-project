@@ -193,6 +193,9 @@ public class Galaxy extends JPanel implements Runnable {
         for (int i = 0; i < planet.length; i++) {
             planet[i] = new Planet(planetPosition[i].id);
             planet[i].start();
+
+            Planet p = planet[i];
+            Game.network.emit(Network.ACTION_PLAYER_MOVE, new Position(p.id, p.x, p.y, p.vx, p.vy, p.speed));
         }
     }
 }
