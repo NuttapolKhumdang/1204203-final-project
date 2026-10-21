@@ -18,8 +18,8 @@ public class Planet extends Thread {
 
     public int id;
     public int x, y;
-    int vx, vy;
-    int speed;
+    public int vx, vy;
+    public int speed;
     int planetSize;
     int canvasWidth, canvasHeight;
 
