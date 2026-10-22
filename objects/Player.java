@@ -18,11 +18,14 @@ import javax.swing.JPanel;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import helper.Audio;
 import helper.Network;
 import helper.Position;
 import scence.Game;
 
 public class Player extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
+    private Audio shootAudio = new Audio(Asset.getAudioFile("shoot.wav"));
+
     private Image shipTexture;;
     private Random random = new Random();
     public Ammo[] ammos = new Ammo[GameConfig.MAX_AMMO];
@@ -319,7 +322,11 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (shootAudio.clip.isRunning()) // prevent player from firing when audio is playing, to delay on every fire
+            return;
+
         fire();
+        shootAudio.play();
     }
 
     @Override
