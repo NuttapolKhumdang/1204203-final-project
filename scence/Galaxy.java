@@ -196,7 +196,7 @@ public class Galaxy extends JPanel implements Runnable {
             planet[i].start();
 
             Planet p = planet[i];
-            Game.network.emit(Network.ACTION_PLAYER_MOVE, new Position(p.id, p.x, p.y, p.vx, p.vy, p.speed));
+            Game.network.emit(Network.ACTION_PLANET_MOVE, new Position(p.id, p.x, p.y, p.vx, p.vy, p.speed));
         }
 
         new Audio(Asset.getAudioFile("background.wav"), true).play();
