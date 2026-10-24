@@ -88,6 +88,7 @@ public class Game extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        setTitle("" + network.getPort() + (network.isPlanetController() ? " [SERVER]" : " [CLIENT]"));
 
         Galaxy g = new Galaxy(network.enemiesIds().size());
         add(g);
