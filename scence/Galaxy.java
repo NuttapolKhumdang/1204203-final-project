@@ -32,7 +32,7 @@ public class Galaxy extends JPanel implements Runnable {
             planetObserver();
 
             try {
-                Thread.sleep(15);
+                Thread.sleep(XConfig.FRAME_TIME);
             } catch (Exception e) {
             }
         }

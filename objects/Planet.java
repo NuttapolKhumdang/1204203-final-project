@@ -56,8 +56,8 @@ public class Planet extends Thread {
     }
 
     protected void move() {
-        x += vx;
-        y += vy;
+        x += vx * speed;
+        y += vy * speed;
     }
 
     protected void collisionObserver() {
@@ -104,7 +104,7 @@ public class Planet extends Thread {
             }
 
             try {
-                Thread.sleep(100 / speed);
+                Thread.sleep(XConfig.FRAME_TIME);
             } catch (Exception e) {
             }
         }

@@ -46,8 +46,6 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     double rotation = 0;
 
     int x, y;
-    int vx = 0;
-    int vy = 0;
     int size = 50;
     int ammo = GameConfig.MAX_AMMO;
     int life = GameConfig.MAX_LIFE;
@@ -69,7 +67,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
             lifeObserver();
 
             try {
-                Thread.sleep(15 / speed);
+                Thread.sleep(XConfig.FRAME_TIME);
             } catch (Exception e) {
             }
         }
@@ -322,7 +320,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (shootAudio.clip.isRunning()) // prevent player from firing when audio is playing, to delay on every fire
+        if (shootAudio.clip.isRunning()) // prevent player from firing when audio is playing, to delay on each fire
             return;
 
         fire();

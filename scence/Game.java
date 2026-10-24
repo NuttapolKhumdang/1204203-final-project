@@ -30,7 +30,7 @@ public class Game extends JFrame {
         watingRoom.add(watingText);
 
         if (hosts.equals("::1")) {
-            JLabel serverText = new JLabel("Server IP: "+ ActiveIPFetcher.get(), JLabel.CENTER);
+            JLabel serverText = new JLabel("Server IP: " + ActiveIPFetcher.get(), JLabel.CENTER);
             serverText.setFont(new Font("CommitMono", Font.BOLD, 32));
             serverText.setBounds(0, 100, 600, 100);
             watingRoom.add(serverText);
@@ -44,7 +44,7 @@ public class Game extends JFrame {
                 network.connect(hosts);
 
                 while (!network.isGameStart()) {
-                    Thread.sleep(100);
+                    Thread.sleep(XConfig.FRAME_TIME * 2);
 
                     if (!network.isPlanetExists() && !network.isPlanetController()) {
                         network.setPlanetController();
@@ -67,7 +67,7 @@ public class Game extends JFrame {
                         network.emit(Network.ACTION_PLANET_INFO, String.join("::", planets));
                     }
                 }
-                Thread.sleep(1000);
+                Thread.sleep(XConfig.FRAME_TIME * 4);
             } catch (Exception e) {
                 System.err.println("[ERROR] Cannot connect to server");
                 System.exit(1);

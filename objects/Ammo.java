@@ -60,8 +60,8 @@ public class Ammo extends Thread {
     }
 
     protected void move() {
-        x += vx;
-        y += vy;
+        x += vx * speed;
+        y += vy * speed;
     }
 
     protected void collisionObserver() {
@@ -80,7 +80,7 @@ public class Ammo extends Thread {
             collisionObserver();
 
             try {
-                Thread.sleep(10 / GameConfig.AMMO_SPEED);
+                Thread.sleep(XConfig.FRAME_TIME);
             } catch (Exception e) {
             }
         }
