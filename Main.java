@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import config.XConfig;
 import scence.Game;
 import server.Server;
 
@@ -19,11 +20,27 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        // ? For development purpurse
+        if (args.length == 2) {
+            if (args[1].equals("--server")) {
+                server = new Server();
+                server.start();
+
+                new Main("::1");
+                return;
+            }
+
+            if (args[1].equals("--client")) {
+                new Main("127.0.0.1");
+                return;
+            }
+        }
+
         MainDialog dialog = new MainDialog();
 
         try {
             while (!dialog.isConfirm()) {
-                Thread.sleep(1);
+                Thread.sleep(XConfig.FRAME_TIME);
             }
         } catch (Exception e) {
         }
