@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import config.GameConfig;
 import config.XConfig;
 import helper.Asset;
+import helper.Audio;
 import helper.Network;
 import helper.Position;
 import scence.Game;
@@ -57,6 +58,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
             if (isEnded || isCrashed) {
                 move(new Position(0, -100, -100, 0));
                 Game.network.emit(Network.ACTION_PLAYER_MOVE, new Position(0, x, y, rotation));
+                new Audio(Asset.getAudioFile("dead.wav")).play();
                 break;
             }
 
@@ -202,7 +204,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
         if (ammo <= 0 || isEnded || isCrashed) {
             return; // out of ammo
         }
-
+        new Audio(Asset.getAudioFile("shoot.wav")).play();
         for (int idx = 0; idx < ammos.length; idx++) {
             if (ammos[idx] != null)
                 continue;
