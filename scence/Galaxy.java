@@ -2,7 +2,6 @@ package scence;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -206,7 +205,9 @@ public class Galaxy extends JPanel implements Runnable {
             ;
 
             Planet p = planet[i];
-            Game.network.emit(Network.ACTION_PLANET_MOVE, new Position(p.id, p.x, p.y, p.vx, p.vy, p.speed));
+
+            if (Game.network.isPlanetController())
+                Game.network.emit(Network.ACTION_PLANET_MOVE, new Position(p.id, p.x, p.y, p.vx, p.vy, p.speed));
         }
         new Audio(Asset.getAudioFile("background.wav"), true);
     }
