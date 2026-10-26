@@ -199,7 +199,7 @@ public class Player extends JPanel implements Runnable, KeyListener, MouseListen
     }
 
     protected void fire() {
-        if (ammo <= 0) {
+        if (ammo <= 0 || isEnded || isCrashed) {
             return; // out of ammo
         }
 
