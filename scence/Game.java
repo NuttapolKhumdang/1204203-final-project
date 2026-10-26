@@ -17,6 +17,8 @@ public class Game extends JFrame {
     private String[] planets;
 
     public Game(String hosts) {
+        boolean isServer = hosts.equals("::1");
+
         JFrame watingRoom = new JFrame();
         watingRoom.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -29,7 +31,7 @@ public class Game extends JFrame {
         watingText.setBounds(0, 50, 600, 100);
         watingRoom.add(watingText);
 
-        if (hosts.equals("::1")) {
+        if (isServer) {
             JLabel serverText = new JLabel("Server IP: " + ActiveIPFetcher.get(), JLabel.CENTER);
             serverText.setFont(new Font("CommitMono", Font.BOLD, 32));
             serverText.setBounds(0, 100, 600, 100);
@@ -44,13 +46,9 @@ public class Game extends JFrame {
                 network.connect(hosts);
 
                 while (!network.isGameStart()) {
-                    Thread.sleep(XConfig.FRAME_TIME * 2);
-
-                    if (!network.isPlanetExists() && !network.isPlanetController()) {
+                    if (isServer) {
                         network.setPlanetController();
-                    }
 
-                    if (network.isPlanetController()) {
                         if (planets == null) {
                             Random random = new Random();
 
