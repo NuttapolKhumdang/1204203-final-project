@@ -6,7 +6,7 @@ public class GameConfig {
     public static int MAX_AMMO = 5;
     
     public static int PLANET_MIN_COUNT = 2;
-    public static int PLANET_MAX_COUNT = 5;
+    public static int PLANET_MAX_COUNT = 3;
     public static int PLANET_MIN_SPEED = 1;
     public static int PLANET_MAX_SPEED = 4;
     

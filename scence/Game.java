@@ -46,9 +46,12 @@ public class Game extends JFrame {
                 network.connect(hosts);
 
                 while (!network.isGameStart()) {
+                    Thread.sleep(XConfig.FRAME_TIME * 4);
                     if (isServer) {
                         network.setPlanetController();
+                    }
 
+                    if (network.isPlanetController()) {
                         if (planets == null) {
                             Random random = new Random();
 

@@ -27,14 +27,15 @@ public class Server extends Thread {
                 System.out.println("SERVER::CONNECTED::" + socket.getInetAddress());
                 System.out.println("SERVER::CLIENT_SIZE::" + server.clients.size());
                 server.broadcast("SERVER::11::" + server.clients.size());
-
+                
                 String pString = "";
                 for (ClientHandler c : server.clients) {
                     pString += "::" + String.valueOf(c.getSocket().getPort());
                 }
                 server.broadcast("SERVER::12" + pString);
-
+                
                 if (server.clients.size() == GameConfig.MAX_PLAYER) {
+                    System.out.println("SERVER::GAME_START");
                     server.broadcast("SERVER::21");
                 }
             }
@@ -43,6 +44,7 @@ public class Server extends Thread {
     }
 
     public void broadcast(String message) {
+        System.out.println(message);
         for (ClientHandler client : clients) {
             client.send(message);
         }

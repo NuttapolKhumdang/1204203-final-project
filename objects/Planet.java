@@ -3,6 +3,7 @@ package objects;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Random;
+import java.util.TimerTask;
 
 import config.GameConfig;
 import config.XConfig;
@@ -11,7 +12,7 @@ import helper.Network;
 import helper.Position;
 import scence.Game;
 
-public class Planet extends Thread {
+public class Planet extends TimerTask {
     Random random = new Random();
     Image texture = Asset.getImage("Planet_Large.png");
     int[] SIZE = { 30, 45, 60 };
@@ -96,17 +97,10 @@ public class Planet extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            move();
+        move();
 
-            if (Game.network.isPlanetController()) {
-                collisionObserver();
-            }
-
-            try {
-                Thread.sleep(XConfig.FRAME_TIME);
-            } catch (Exception e) {
-            }
+        if (Game.network.isPlanetController()) {
+            collisionObserver();
         }
     }
 }

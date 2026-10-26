@@ -3,6 +3,8 @@ package scence;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JPanel;
 
@@ -194,7 +196,14 @@ public class Galaxy extends JPanel implements Runnable {
         Position[] planetPosition = Game.network.getPlanet().values().toArray(new Position[0]);
         for (int i = 0; i < planet.length; i++) {
             planet[i] = new Planet(planetPosition[i].id);
-            planet[i].start();
+
+            TimerTask tPlanet = planet[i];
+
+            new Thread(() -> {
+                Timer timer = new Timer();
+                timer.schedule(tPlanet, XConfig.FRAME_TIME, XConfig.FRAME_TIME);
+            }, "planet-thread").start();
+            ;
 
             Planet p = planet[i];
             Game.network.emit(Network.ACTION_PLANET_MOVE, new Position(p.id, p.x, p.y, p.vx, p.vy, p.speed));

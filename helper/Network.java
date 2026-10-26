@@ -48,6 +48,7 @@ public class Network {
 
                 String line = "";
                 while ((line = in.readLine()) != null) {
+                    System.out.println(line);
                     handler(line);
                 }
             } catch (IOException e) {
@@ -218,7 +219,6 @@ public class Network {
             int vy = Integer.parseInt(fracture[7]);
             int speed = Integer.parseInt(fracture[8]);
 
-            System.out.println(x + " " + y + " " + vx + " " + vy + " " + speed);
             planet.put(id, new Position(id, x, y, vx, vy, speed));
         }
     }
